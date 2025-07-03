@@ -54,14 +54,6 @@ export default function Sidebar({ onGenerateSchedule }) {
                 <option value="4">4</option>
               </select>
             </label>
-            {/* <label>
-              Allow Double Up:
-              <input
-                type="checkbox"
-                checked={allowDoubleUp}
-                onChange={(e) => setAllowDoubleUp(e.target.checked)}
-              />
-            </label> */}
             <button type="submit" >Generate Schedule</button>
           </form>
 

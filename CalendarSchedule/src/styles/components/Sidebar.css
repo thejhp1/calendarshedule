@@ -27,6 +27,33 @@
 .scheduler-form {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    font-size: 20px;
+    gap: 1rem;
+    padding: 3rem;
+}
+
+.scheduler-form input, .scheduler-form select {
+    margin-left: 1rem;
+    width: 5rem;
+    height: 1.5rem;
+    padding-left: .3rem;
+    cursor: pointer;
+    box-shadow: 2px 2px 4px 1px rgb(0, 0, 0);
+}
+
+.scheduler-form button {
+    margin-top: 3rem;
+    font-size: 25px;
+    background-color: #0c0c29;;
+    border-color: rgb(174, 172, 172);
+    border-radius: .5rem;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+.scheduler-form button:hover {
+    background-color: #2e2e7b;
 }
 
 .warning-message {
