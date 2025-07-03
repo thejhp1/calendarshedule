@@ -27,8 +27,10 @@ export function generateDailySchedule({ estCount, pstCount, numShifts }) {
   const estPeople = Array.from({ length: estCount }, (_, i) => `EST_${i + 1}`);
   const pstPeople = Array.from({ length: pstCount }, (_, i) => `PST_${i + 1}`);
 
-  if (estPeople.length === 0) throw new Error("You must have at least 1 EST person.");
-  if (pstPeople.length === 0) throw new Error("You must have at least 1 PST person.");
+  if (estPeople.length === 0)
+    throw new Error("You must have at least 1 EST person.");
+  if (pstPeople.length === 0)
+    throw new Error("You must have at least 1 PST person.");
 
   const assignedPeople = new Set();
   const shifts = [];
@@ -45,14 +47,18 @@ export function generateDailySchedule({ estCount, pstCount, numShifts }) {
     } else {
       // Middle shifts: EST or PST, but reserve PST people for last shift
       // Calculate how many PST people remain unassigned:
-      const pstAssignedCount = Array.from(assignedPeople).filter((p) => p.startsWith("PST_")).length;
+      const pstAssignedCount = Array.from(assignedPeople).filter((p) =>
+        p.startsWith("PST_")
+      ).length;
       const pstRemaining = pstPeople.length - pstAssignedCount;
 
       // If only one PST person remains and last shift not assigned, do not assign PST in middle shift
       if (pstRemaining <= 1) {
         available = estPeople.filter((p) => !assignedPeople.has(p));
       } else {
-        available = [...estPeople, ...pstPeople].filter((p) => !assignedPeople.has(p));
+        available = [...estPeople, ...pstPeople].filter(
+          (p) => !assignedPeople.has(p)
+        );
       }
     }
 
@@ -60,7 +66,9 @@ export function generateDailySchedule({ estCount, pstCount, numShifts }) {
 
     if (available.length === 0) {
       throw new Error(
-        `Not enough unique people left for shift ${i + 1}. Try adding more people!`
+        `Not enough unique people left for shift ${
+          i + 1
+        }. Try adding more people!`
       );
     }
 

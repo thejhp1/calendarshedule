@@ -54,7 +54,7 @@ export default function Sidebar({ onGenerateSchedule }) {
                 <option value="4">4</option>
               </select>
             </label>
-            <button type="submit" >Generate Schedule</button>
+            <button type="submit">Generate Schedule</button>
           </form>
 
           {/* ✅ Show warning message if exists */}

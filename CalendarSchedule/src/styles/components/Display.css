@@ -21,6 +21,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    border-radius: .5rem;
     background-color: #131337;
     height: 500px;
     width: 1000px;

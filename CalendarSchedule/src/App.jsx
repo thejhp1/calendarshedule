@@ -2,7 +2,10 @@ import { useState } from "react";
 import "./App.css";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Display from "./components/Display/Display";
-import { generateWeeklySchedule, checkEnoughPeople } from "./components/Sidebar/scheduler";
+import {
+  generateWeeklySchedule,
+  checkEnoughPeople,
+} from "./components/Sidebar/scheduler";
 
 function App() {
   const [schedule, setSchedule] = useState(null);
@@ -18,14 +21,21 @@ function App() {
     }
 
     setWarningMessage("");
-    const newSchedule = generateWeeklySchedule({ estCount, pstCount, numShifts });
+    const newSchedule = generateWeeklySchedule({
+      estCount,
+      pstCount,
+      numShifts,
+    });
     setSchedule(newSchedule);
   };
 
   return (
     <main className="app-container">
       <Display schedule={schedule} warningMessage={warningMessage} />
-      <Sidebar onGenerateSchedule={handleGenerate} warningMessage={warningMessage} />
+      <Sidebar
+        onGenerateSchedule={handleGenerate}
+        warningMessage={warningMessage}
+      />
     </main>
   );
 }
