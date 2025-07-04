@@ -82,8 +82,10 @@ export default function Sidebar({
 
           <button type="submit">Generate Schedule</button>
         </form>
-
-        <section className="display-content-toggle-container">
+        <section className="sidebar-google-button-container">
+          <button className="sidebar-google-button" type="submit">Send to Calendar</button>
+        </section>
+        <section className="sidebar-content-toggle-container">
           <p>Timezone Toggle: {timeZoneToggle}</p>
           <input
             type="checkbox"

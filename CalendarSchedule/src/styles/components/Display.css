@@ -42,7 +42,7 @@
     align-items: center;
     border-radius: .5rem;
     background-color: #131337;
-    min-height: 200px;
+    min-height: 250px;
     width: 500px;
     margin-top: 3rem;
     box-shadow: 0 1rem 1.5rem 5px rgb(0, 0, 0);
@@ -59,18 +59,18 @@
 
 .display-schedule-table td, .display-schedule-table-container th {
     text-align: center;
-    font-size: 16px;
+    font-size: 20px;
     margin-left: .5rem;
-    /* padding: 0rem .5rem; */
     width: fit-content;
 }
 
-.display-schedule-table > * {
+.display-schedule-table td {
+    padding: 0rem .5rem;
 }
 
 .display-totals-table th, .display-totals-table td {
     text-align: center;
-    font-size: 19px;
+    font-size: 20px;
     padding-left: 2rem;
 }
 
