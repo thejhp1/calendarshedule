@@ -45,7 +45,7 @@
 }
 
 .scheduler-form button {
-    margin-top: 3rem;
+    margin-top: 1rem;
     font-size: 25px;
     background-color: #0c0c29;;
     border-color: rgb(174, 172, 172);
@@ -62,4 +62,15 @@
   margin-top: 1rem;
   color: #ec7087;
   font-weight: bold;
+}
+
+.display-content-toggle-container {
+    display: flex;
+    justify-content: right;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.display-conent-toggle-title {
+    font-size: 18px;
 }

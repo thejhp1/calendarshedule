@@ -1,7 +1,7 @@
 import "../../styles/components/Sidebar.css";
 import { useState } from "react";
 
-export default function Sidebar({ onGenerateSchedule }) {
+export default function Sidebar({ onGenerateSchedule, timeZoneToggle, toggleTimeZone }) {
   const [estCount, setEstCount] = useState(2);
   const [pstCount, setPstCount] = useState(2);
   const [numShifts, setNumShifts] = useState(4);
@@ -56,6 +56,16 @@ export default function Sidebar({ onGenerateSchedule }) {
             </label>
             <button type="submit">Generate Schedule</button>
           </form>
+          <section className="display-content-toggle-container">
+            <p className="display-conent-toggle-title">
+              Timezone Toggle: {timeZoneToggle}
+            </p>
+            <input
+              type="checkbox"
+              className="display-content-toggle"
+              onClick={toggleTimeZone}
+            ></input>
+          </section>
 
           {/* ✅ Show warning message if exists */}
           {warningMessage && (

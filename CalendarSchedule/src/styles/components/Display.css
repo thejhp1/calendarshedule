@@ -17,13 +17,12 @@
 }
 
 
-.display-content {
+.display-content-shedule {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     border-radius: .5rem;
     background-color: #131337;
-    height: 500px;
     width: 1000px;
     margin-top: 3rem;
     box-shadow: 0 1rem 1.5rem 5px rgb(0, 0, 0);
@@ -31,6 +30,7 @@
 
 .display-schedule-container {
     padding: 2rem;
+    height: fit-content;
 }
 
 .display-schedule-table td, .display-schedule-container h3 {
@@ -41,7 +41,7 @@
 
 @media (min-width: 1600px)
         and (max-width: 2199px) {
-        .display-content {
+        .display-content-shedule {
             width: 1200px;
         }
         .display-schedule-table td, .display-schedule-container h3 {
@@ -51,7 +51,7 @@
     }
 
 @media (min-width: 2200px) {
-        .display-content {
+        .display-content-shedule {
             width: 1800px;
         }
     }

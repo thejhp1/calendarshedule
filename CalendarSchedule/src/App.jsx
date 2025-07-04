@@ -10,6 +10,8 @@ import {
 function App() {
   const [schedule, setSchedule] = useState(null);
   const [warningMessage, setWarningMessage] = useState("");
+  const [timeZoneToggle, setTimeZoneToggle] = useState("EST");
+  const [flag, setFlag] = useState(true);
 
   const handleGenerate = ({ estCount, pstCount, numShifts }) => {
     if (!checkEnoughPeople(estCount, pstCount, numShifts)) {
@@ -29,12 +31,24 @@ function App() {
     setSchedule(newSchedule);
   };
 
+  const toggleTimeZone = () => {
+    if (flag) {
+      setTimeZoneToggle("PST");
+      setFlag(false)
+    } else {
+      setTimeZoneToggle("EST");
+      setFlag(true)
+    }
+  };
+
   return (
     <main className="app-container">
-      <Display schedule={schedule} warningMessage={warningMessage} />
+      <Display schedule={schedule} warningMessage={warningMessage} timeZoneToggle={timeZoneToggle}/>
       <Sidebar
         onGenerateSchedule={handleGenerate}
         warningMessage={warningMessage}
+        timeZoneToggle={timeZoneToggle}
+        toggleTimeZone={toggleTimeZone}
       />
     </main>
   );
