@@ -13,10 +13,10 @@ function App() {
   const [timeZoneToggle, setTimeZoneToggle] = useState("EST");
   const [flag, setFlag] = useState(true);
 
-  const handleGenerate = ({ estCount, pstCount, numShifts }) => {
-    if (!checkEnoughPeople(estCount, pstCount, numShifts)) {
+  const handleGenerate = ({ estPeople, pstPeople, numShifts }) => {
+    if (!checkEnoughPeople(estPeople, pstPeople, numShifts)) {
       setWarningMessage(
-        "Not enough people to cover all shifts without repeats. Please add more EST or PST people."
+        "Not enough people to cover all shifts without repeats. Please add more names."
       );
       setSchedule(null);
       return;
@@ -24,12 +24,13 @@ function App() {
 
     setWarningMessage("");
     const newSchedule = generateWeeklySchedule({
-      estCount,
-      pstCount,
+      estPeople,
+      pstPeople,
       numShifts,
     });
     setSchedule(newSchedule);
   };
+
 
   const toggleTimeZone = () => {
     if (flag) {

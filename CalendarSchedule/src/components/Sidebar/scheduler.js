@@ -1,11 +1,6 @@
 // scheduler.js
 
-/**
- * Generates the daily schedule for one day.
- * Ensures each person only works ONE shift per day.
- * Throws an error if there are not enough unique people.
- */
-export function generateDailySchedule({ estCount, pstCount, numShifts }) {
+export function generateDailySchedule({ estPeople, pstPeople, numShifts }, globalShiftCount) {
   const shiftBlocks = {
     3: [
       { start: "9:00AM", end: "12:30PM" },
@@ -24,47 +19,37 @@ export function generateDailySchedule({ estCount, pstCount, numShifts }) {
     throw new Error(`Unsupported number of shifts: ${numShifts}`);
   }
 
-  const estPeople = Array.from({ length: estCount }, (_, i) => `EST_${i + 1}`);
-  const pstPeople = Array.from({ length: pstCount }, (_, i) => `PST_${i + 1}`);
-
   if (estPeople.length === 0)
     throw new Error("You must have at least 1 EST person.");
   if (pstPeople.length === 0)
     throw new Error("You must have at least 1 PST person.");
 
-  const assignedPeople = new Set();
+  const assignedToday = new Set();
   const shifts = [];
 
   for (let i = 0; i < shiftBlocks.length; i++) {
-    let available;
+    let eligible;
 
     if (i === 0) {
-      // First shift: EST only
-      available = estPeople.filter((p) => !assignedPeople.has(p));
+      eligible = estPeople.filter(p => !assignedToday.has(p));
     } else if (i === shiftBlocks.length - 1) {
-      // Last shift: PST only
-      available = pstPeople.filter((p) => !assignedPeople.has(p));
+      eligible = pstPeople.filter(p => !assignedToday.has(p));
     } else {
-      // Middle shifts: EST or PST, but reserve PST people for last shift
-      // Calculate how many PST people remain unassigned:
-      const pstAssignedCount = Array.from(assignedPeople).filter((p) =>
-        p.startsWith("PST_")
+      const pstAssignedToday = Array.from(assignedToday).filter(p =>
+        pstPeople.includes(p)
       ).length;
-      const pstRemaining = pstPeople.length - pstAssignedCount;
+      const pstRemaining = pstPeople.length - pstAssignedToday;
 
-      // If only one PST person remains and last shift not assigned, do not assign PST in middle shift
       if (pstRemaining <= 1) {
-        available = estPeople.filter((p) => !assignedPeople.has(p));
+        eligible = estPeople.filter(p => !assignedToday.has(p));
       } else {
-        available = [...estPeople, ...pstPeople].filter(
-          (p) => !assignedPeople.has(p)
+        eligible = [...estPeople, ...pstPeople].filter(
+          p => !assignedToday.has(p)
         );
       }
     }
 
-    console.log(`Shift ${i + 1} available people:`, available);
-
-    if (available.length === 0) {
+    if (eligible.length === 0) {
       throw new Error(
         `Not enough unique people left for shift ${
           i + 1
@@ -72,8 +57,21 @@ export function generateDailySchedule({ estCount, pstCount, numShifts }) {
       );
     }
 
-    const person = available[Math.floor(Math.random() * available.length)];
-    assignedPeople.add(person);
+    // Pick among the eligible with fewest total shifts so far:
+    let minShifts = Infinity;
+    eligible.forEach(name => {
+      const count = globalShiftCount[name] || 0;
+      if (count < minShifts) minShifts = count;
+    });
+
+    const leastUsed = eligible.filter(
+      name => (globalShiftCount[name] || 0) === minShifts
+    );
+
+    const person = leastUsed[Math.floor(Math.random() * leastUsed.length)];
+    assignedToday.add(person);
+
+    globalShiftCount[person] = (globalShiftCount[person] || 0) + 1;
 
     shifts.push({
       shiftNum: i + 1,
@@ -85,38 +83,28 @@ export function generateDailySchedule({ estCount, pstCount, numShifts }) {
   return shifts;
 }
 
-/**
- * Generates a full Monday–Friday schedule.
- * Each day is independent but all use the same input constraints.
- */
-export function generateWeeklySchedule(inputs) {
+export function generateWeeklySchedule({ estPeople, pstPeople, numShifts }) {
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const globalShiftCount = {};
 
-  return days.map((day) => ({
+  return days.map(day => ({
     day,
-    shifts: generateDailySchedule(inputs),
+    shifts: generateDailySchedule({ estPeople, pstPeople, numShifts }, globalShiftCount),
   }));
 }
 
-/**
- * Checks if you have enough unique people to cover the shifts
- * without forcing double-ups.
- *
- * @returns {boolean} true = enough, false = not enough
- */
-export function checkEnoughPeople(estCount, pstCount, numShifts) {
-  if (estCount < 1 || pstCount < 1) return false;
+export function checkEnoughPeople(estPeople, pstPeople, numShifts) {
+  if (estPeople.length < 1 || pstPeople.length < 1) return false;
 
-  const estOnlyShifts = 1; // first shift
-  const pstOnlyShifts = 1; // last shift
+  const estOnlyShifts = 1;
+  const pstOnlyShifts = 1;
   const middleShifts = numShifts - 2;
 
-  // Split middle shifts roughly evenly between EST and PST
   const estMiddleNeeded = Math.ceil(middleShifts / 2);
   const pstMiddleNeeded = Math.floor(middleShifts / 2);
 
   const estNeeded = estOnlyShifts + estMiddleNeeded;
   const pstNeeded = pstOnlyShifts + pstMiddleNeeded;
 
-  return estCount >= estNeeded && pstCount >= pstNeeded;
+  return estPeople.length >= estNeeded && pstPeople.length >= pstNeeded;
 }

@@ -1,78 +1,97 @@
-import "../../styles/components/Sidebar.css";
 import { useState } from "react";
+import "../../styles/components/Sidebar.css";
+import { checkEnoughPeople } from "./scheduler";
 
-export default function Sidebar({ onGenerateSchedule, timeZoneToggle, toggleTimeZone }) {
-  const [estCount, setEstCount] = useState(2);
-  const [pstCount, setPstCount] = useState(2);
-  const [numShifts, setNumShifts] = useState(4);
-  const [warningMessage, setWarningMessage] = useState("");
+export default function Sidebar({
+  onGenerateSchedule,
+  timeZoneToggle,
+  toggleTimeZone,
+}) {
+  const [numShifts, setNumShifts] = useState(3);
+  const [estNames, setEstNames] = useState("");
+  const [pstNames, setPstNames] = useState("");
 
-  // on submit:
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const est = parseInt(estCount, 10);
-    const pst = parseInt(pstCount, 10);
-    const shifts = parseInt(numShifts, 10);
+    const estPeople = estNames.split(",").map((n) => n.trim()).filter(Boolean);
+    const pstPeople = pstNames.split(",").map((n) => n.trim()).filter(Boolean);
 
-    onGenerateSchedule({ estCount: est, pstCount: pst, numShifts: shifts });
+    if (estPeople.length === 0 || pstPeople.length === 0) {
+      alert("Please enter at least one name for both EST and PST.");
+      return;
+    }
+
+    if (!checkEnoughPeople(estPeople, pstPeople, Number(numShifts))) {
+      alert(
+        "Not enough people to cover all shifts without repeats. Please add more names."
+      );
+      return;
+    }
+
+    onGenerateSchedule({
+      estPeople,
+      pstPeople,
+      numShifts: Number(numShifts),
+    });
   };
 
   return (
-    <>
-      <section className="sidebar-container">
-        <section className="sidebar-title">
-          <p>Enter The Things Here</p>
-        </section>
-        <section className="sidebar-content">
-          <form className="scheduler-form" onSubmit={handleSubmit}>
-            <label>
-              EST People:
-              <input
-                type="number"
-                min="0"
-                value={estCount}
-                onChange={(e) => setEstCount(e.target.value)}
-              />
-            </label>
-            <label>
-              PST People:
-              <input
-                type="number"
-                min="0"
-                value={pstCount}
-                onChange={(e) => setPstCount(e.target.value)}
-              />
-            </label>
-            <label>
-              Number of Shifts:
-              <select
-                value={numShifts}
-                onChange={(e) => setNumShifts(e.target.value)}
-              >
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select>
-            </label>
-            <button type="submit">Generate Schedule</button>
-          </form>
-          <section className="display-content-toggle-container">
-            <p className="display-conent-toggle-title">
-              Timezone Toggle: {timeZoneToggle}
-            </p>
-            <input
-              type="checkbox"
-              className="display-content-toggle"
-              onClick={toggleTimeZone}
-            ></input>
-          </section>
+    <section className="sidebar-container">
+      <section className="sidebar-title">
+        <h3>Enter The Things Here</h3>
+      </section>
 
-          {/* ✅ Show warning message if exists */}
-          {warningMessage && (
-            <div className="warning-message">{warningMessage}</div>
-          )}
+      <section className="sidebar-content">
+        <form className="scheduler-form" onSubmit={handleSubmit}>
+          <label>
+            <h4>
+              EST QAEs:
+            </h4>
+            <input
+              type="text"
+              value={estNames}
+              onChange={(e) => setEstNames(e.target.value)}
+            />
+          </label>
+
+          <label>
+            <h4>
+              PST QAEs:
+            </h4>
+            <input
+              type="text"
+              value={pstNames}
+              onChange={(e) => setPstNames(e.target.value)}
+            />
+          </label>
+
+          <label>
+            <h4>
+              Number of Shifts:
+            </h4>
+            <select
+              value={numShifts}
+              onChange={(e) => setNumShifts(Number(e.target.value))}
+              style={{ width: `50px` }}
+            >
+              <option value={3}>3</option>
+              <option value={4}>4</option>
+            </select>
+          </label>
+
+          <button type="submit">Generate Schedule</button>
+        </form>
+
+        <section className="display-content-toggle-container">
+          <p>Timezone Toggle: {timeZoneToggle}</p>
+          <input
+            type="checkbox"
+            className="display-content-toggle"
+            onClick={toggleTimeZone}
+          />
         </section>
       </section>
-    </>
+    </section>
   );
 }
