@@ -3,15 +3,15 @@
 export function generateDailySchedule({ estPeople, pstPeople, numShifts }, globalShiftCount) {
   const shiftBlocks = {
     3: [
-      { start: "9:00AM", end: "12:30PM" },
-      { start: "12:30PM", end: "4:00PM" },
-      { start: "4:00PM", end: "8:00PM" },
+      { start: "9AM", end: "12:30PM" },
+      { start: "12:30PM", end: "4PM" },
+      { start: "4PM", end: "8PM" },
     ],
     4: [
-      { start: "9:00AM", end: "12:00PM" },
-      { start: "12:00PM", end: "2:30PM" },
-      { start: "2:30PM", end: "5:00PM" },
-      { start: "5:00PM", end: "8:00PM" },
+      { start: "9AM", end: "12PM" },
+      { start: "12PM", end: "2:30PM" },
+      { start: "2:30PM", end: "5PM" },
+      { start: "5PM", end: "8PM" },
     ],
   }[numShifts];
 
@@ -57,7 +57,6 @@ export function generateDailySchedule({ estPeople, pstPeople, numShifts }, globa
       );
     }
 
-    // Pick among the eligible with fewest total shifts so far:
     let minShifts = Infinity;
     eligible.forEach(name => {
       const count = globalShiftCount[name] || 0;
