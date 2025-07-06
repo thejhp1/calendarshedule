@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "../../styles/components/Sidebar.css";
 import { checkEnoughPeople } from "./scheduler";
+import SendToCalendarModal from "../SendToCalendarModal/SendToCalendarModal";
+import OpenModalSpan from "../OpenModalSpan/OpenModalSpan";
 
 export default function Sidebar({
   onGenerateSchedule,
@@ -14,8 +16,14 @@ export default function Sidebar({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const estPeople = estNames.split(",").map((n) => n.trim()).filter(Boolean);
-    const pstPeople = pstNames.split(",").map((n) => n.trim()).filter(Boolean);
+    const estPeople = estNames
+      .split(",")
+      .map((n) => n.trim())
+      .filter(Boolean);
+    const pstPeople = pstNames
+      .split(",")
+      .map((n) => n.trim())
+      .filter(Boolean);
 
     if (estPeople.length === 0 || pstPeople.length === 0) {
       alert("Please enter at least one name for both EST and PST.");
@@ -45,9 +53,7 @@ export default function Sidebar({
       <section className="sidebar-content">
         <form className="scheduler-form" onSubmit={handleSubmit}>
           <label>
-            <h4>
-              EST QAEs:
-            </h4>
+            <h4>EST QAEs:</h4>
             <input
               type="text"
               value={estNames}
@@ -56,9 +62,7 @@ export default function Sidebar({
           </label>
 
           <label>
-            <h4>
-              PST QAEs:
-            </h4>
+            <h4>PST QAEs:</h4>
             <input
               type="text"
               value={pstNames}
@@ -67,9 +71,7 @@ export default function Sidebar({
           </label>
 
           <label>
-            <h4>
-              Number of Shifts:
-            </h4>
+            <h4>Number of Shifts:</h4>
             <select
               value={numShifts}
               onChange={(e) => setNumShifts(Number(e.target.value))}
@@ -83,7 +85,12 @@ export default function Sidebar({
           <button type="submit">Generate Schedule</button>
         </form>
         <section className="sidebar-google-button-container">
-          <button className="sidebar-google-button" type="submit">Send to Calendar</button>
+          <button className="sidebar-google-button" type="submit">
+            <OpenModalSpan
+              itemText="Send to Calendar"
+              modalComponent={<SendToCalendarModal estNames={estNames} pstNames={pstNames}/>}
+            />
+          </button>
         </section>
         <section className="sidebar-content-toggle-container">
           <p>Timezone Toggle: {timeZoneToggle}</p>
