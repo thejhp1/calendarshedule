@@ -50,6 +50,7 @@ function App() {
         warningMessage={warningMessage}
         timeZoneToggle={timeZoneToggle}
         toggleTimeZone={toggleTimeZone}
+        schedule={schedule}
       />
     </main>
   );

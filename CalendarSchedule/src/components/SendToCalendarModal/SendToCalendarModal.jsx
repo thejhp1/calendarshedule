@@ -2,79 +2,76 @@ import React, { useState } from "react";
 import { useModal } from "../Modal/Modal";
 import "../../styles/components/SendToCalendarModal.css";
 
-function SendToCalendarModal({ estNames = "", pstNames = "" }) {
+function SendToCalendarModal({ estNames = "", pstNames = "", schedule = [] }) {
   const { closeModal } = useModal();
 
-  // Convert comma-separated strings to arrays
-  const estList = estNames.split(",").map((name) => name.trim()).filter(Boolean);
-  const pstList = pstNames.split(",").map((name) => name.trim()).filter(Boolean);
+  const estList = estNames
+    .split(",")
+    .map((name) => name.trim())
+    .filter(Boolean);
+  const pstList = pstNames
+    .split(",")
+    .map((name) => name.trim())
+    .filter(Boolean);
 
-
-  // Initialize each name as default value
   const [estEmails, setEstEmails] = useState(
     Object.fromEntries(estList.map((name, index) => [index, name]))
   );
-
   const [pstEmails, setPstEmails] = useState(
     Object.fromEntries(pstList.map((name, index) => [index, name]))
   );
 
   const handleEstChange = (index, value) => {
-    setEstEmails((prev) => ({
-      ...prev,
-      [index]: value,
-    }));
+    setEstEmails((prev) => ({ ...prev, [index]: value }));
   };
 
   const handlePstChange = (index, value) => {
-    setPstEmails((prev) => ({
-      ...prev,
-      [index]: value,
-    }));
+    setPstEmails((prev) => ({ ...prev, [index]: value }));
   };
 
-const handleSubmit = (e) => {
-  e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  // Check if any EST input is empty
-  const estHasEmpty = estEmails.some(email => !email.trim());
-  const pstHasEmpty = pstEmails.some(email => !email.trim());
+    if (estNames.length === 0 || pstNames.length === 0) {
+      alert("Please enter at least one name for both EST and PST.");
+      return;
+    }
 
-  if (estHasEmpty || pstHasEmpty) {
-    alert("Please fill in all email fields before sending.");
-    return; // Stop here
-  }
+    const estHasEmpty = Object.values(estEmails).some((email) => !email.trim());
+    const pstHasEmpty = Object.values(pstEmails).some((email) => !email.trim());
 
-  const estFullEmails = estList.map(
-    (_, index) => `${estEmails[index]}@qawolf.com`
-  );
-  const pstFullEmails = pstList.map(
-    (_, index) => `${pstEmails[index]}@qawolf.com`
-  );
+    if (estHasEmpty || pstHasEmpty) {
+      alert("Please fill in all email fields before sending.");
+      return;
+    }
 
-  const estDetails = estList.map(
-    (name, index) => `${name}: ${estFullEmails[index]}`
-  ).join("\n");
+    const estFullEmails = estList.map(
+      (_, index) => `${estEmails[index]}@qawolf.com`
+    );
+    const pstFullEmails = pstList.map(
+      (_, index) => `${pstEmails[index]}@qawolf.com`
+    );
 
-  const pstDetails = pstList.map(
-    (name, index) => `${name}: ${pstFullEmails[index]}`
-  ).join("\n");
+    const estDetails = estList
+      .map((name, index) => `${name}: ${estFullEmails[index]}`)
+      .join("\n");
 
-  const confirm = window.confirm(
-    `Are you sure the info is correct?\n\nEST Engineers:\n${estDetails}\n\nPST Engineers:\n${pstDetails}`
-  );
+    const pstDetails = pstList
+      .map((name, index) => `${name}: ${pstFullEmails[index]}`)
+      .join("\n");
 
-  if (!confirm) {
-    return; // Cancelled
-  }
+    const confirm = window.confirm(
+      `Are you sure the info is correct?\n\nEST Engineers:\n${estDetails}\n\nPST Engineers:\n${pstDetails}`
+    );
 
-  console.log("EST emails:", estFullEmails);
-  console.log("PST emails:", pstFullEmails);
+    if (!confirm) return;
 
-  // Proceed with sending
-  closeModal();
-};
+    console.log("EST emails:", estFullEmails);
+    console.log("PST emails:", pstFullEmails);
+    console.log("Full schedule:", schedule);
 
+    closeModal();
+  };
 
   return (
     <section className="send-to-calendar-container">

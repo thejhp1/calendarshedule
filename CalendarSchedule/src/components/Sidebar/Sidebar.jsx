@@ -8,6 +8,7 @@ export default function Sidebar({
   onGenerateSchedule,
   timeZoneToggle,
   toggleTimeZone,
+  schedule,
 }) {
   const [numShifts, setNumShifts] = useState(3);
   const [estNames, setEstNames] = useState("");
@@ -88,7 +89,13 @@ export default function Sidebar({
           <button className="sidebar-google-button" type="submit">
             <OpenModalSpan
               itemText="Send to Calendar"
-              modalComponent={<SendToCalendarModal estNames={estNames} pstNames={pstNames}/>}
+              modalComponent={
+                <SendToCalendarModal
+                  estNames={estNames}
+                  pstNames={pstNames}
+                  schedule={schedule}
+                />
+              }
             />
           </button>
         </section>
